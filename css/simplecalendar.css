@@ -1,0 +1,126 @@
+.simplecalendar-head {
+    background: rgb(250,250,250);
+}
+.simplecalendar-close {
+    float: right;
+    font: bold 22px Arial, sans-serif;
+    padding-top: 1px;
+    width: 25px;
+    text-align: center;
+    margin-left: -25px;
+    color: #444444;
+    cursor: pointer;
+}
+.simplecalendar-close:hover {
+    color: #ffffff;
+    background: #421E4E;
+}
+.simplecalendar-month {
+    font: bold 16px Arial, sans-serif;
+    color: #444444;
+    text-align: center;
+    padding: 15px 0 5px;
+}
+.simplecalendar-week {
+    background: -moz-linear-gradient(top,  rgba(213,213,213,0.1) 0%, rgba(213,213,213,1) 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(213,213,213,0.1)), color-stop(100%,rgba(213,213,213,1))); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top,  rgba(213,213,213,0.1) 0%,rgba(213,213,213,1) 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top,  rgba(213,213,213,0.1) 0%,rgba(213,213,213,1) 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top,  rgba(213,213,213,0.1) 0%,rgba(213,213,213,1) 100%); /* IE10+ */
+    background: linear-gradient(to bottom,  rgba(213,213,213,0.1) 0%,rgba(213,213,213,1) 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#10d5d5d5', endColorstr='#d5d5d5',GradientType=0 ); /* IE6-9 */
+}
+.simplecalendar-week > div {
+    float: left;
+    font: bold 16px Arial, sans-serif;
+    color: #444444;
+    text-align: center;
+    width: 44px;
+    padding: 12px 0;
+    margin: 0 1px 1px 0;
+    background: rgb(250,250,250); /* Old browsers */
+    background: -moz-linear-gradient(top,  rgba(250,250,250,1) 0%, rgba(230,230,230,1) 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(250,250,250,1)), color-stop(100%,rgba(230,230,230,1))); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top,  rgba(250,250,250,1) 0%,rgba(230,230,230,1) 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top,  rgba(250,250,250,1) 0%,rgba(230,230,230,1) 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top,  rgba(250,250,250,1) 0%,rgba(230,230,230,1) 100%); /* IE10+ */
+    background: linear-gradient(to bottom,  rgba(250,250,250,1) 0%,rgba(230,230,230,1) 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fafafa', endColorstr='#e6e6e6',GradientType=0 ); /* IE6-9 */
+}
+.simplecalendar-week :nth-child(7) {
+    margin-right: 0;
+}
+.simplecalendar-week > div.simplecalendar-disabled {
+    color: #888888;
+}
+.simplecalendar-angle {
+    position: absolute;
+    width: 0px; height: 0px;
+    border-right: 12px #ffffff solid;
+    border-top: 12px transparent solid;
+    border-bottom: 12px transparent solid;
+    margin-left: -17px;
+    margin-top: 14px;
+} 
+.simplecalendar { 
+    position: absolute; 
+    box-shadow: 0 0 15px rgba(0,0,0,.5);
+    background-color: #ffffff;
+    padding: 10px;
+    margin-left: 100px;
+    margin-top: -20px;
+}
+.simplecalendar-body {
+    background: #e5e5e5;
+    max-height: 254px; /* -1 + X*51px row height */
+    overflow: hidden;
+    overflow-y: scroll;
+    margin-right: -20px;
+}
+.simplecalendar-bodywrap {
+    overflow: hidden;
+}
+.simplecalendar-row > div {
+    float: left;
+    font: bold 16px/16px Arial, sans-serif;
+    color: #444444;
+    text-align: center;
+    width: 44px;
+    height: 18px;
+    padding: 16px 0;
+    margin: 0 1px 1px 0; 
+    background: #ffffff; 
+    cursor: pointer;   
+    display: table;       
+}
+.simplecalendar-row > div.simplecalendar-selected {
+    background: #421E4E;
+    color: #ffffff;
+}
+.simplecalendar-row > div:hover {
+    background: #D1BDD8;
+    color: #444444;
+}
+.simplecalendar-row > div.simplecalendar-disabled {
+    color: #888888;
+    cursor: default;
+}
+.simplecalendar-row > div.simplecalendar-disabled:hover {
+    background: #ffffff;
+}
+.simplecalendar-row :nth-child(7) {
+    margin-right: 0;
+}
+.simplecalendar-body :last-child > div {
+    margin-bottom: 0;
+}
+.simplecalendar-split {
+    float: left;
+    width: 10px;
+    padding: 7px 2px;
+    height: 36px;
+    margin: -16px 0px -20px 0;
+    background: #444444;
+    color: #ffffff;
+    font: bold 10px/12px Arial, sans-serif;
+}

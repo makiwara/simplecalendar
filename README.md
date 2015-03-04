@@ -15,4 +15,6 @@ I choose to put all styles in simplecalendar.css file, because such an approach 
 
 The CSS is not minimized because it would be better to glue it with other style files and to minimize/obfucate them using Grunt or other automation.
 
-Another way to ged rid of CSS is to hardcode it into javascript library. I consider this path to be inefficient in terms of support and future re-use.
+Another way to get rid of CSS is to hardcode it into javascript library. I consider this path to be inefficient in terms of support and future re-use.
+
+It is not possible to determine exact padding from the PDF, as well as font families and sizes; I took the liberty to use Arial as primary font-face and to adjust paddings, margins and sizes by myself.

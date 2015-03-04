@@ -4,8 +4,8 @@
  
     $.fn.simplecalendar = function(options) {
         var defaults = {
-            prerender: true, // prerender calendar on init? TODO set to false
-            visible: true, // show calendar at start (at first encounter)? TODO set to false
+            prerender: false, // prerender calendar on init? TODO set to false
+            visible: false, // show calendar at start (at first encounter)? TODO set to false
             prevWeeks: 2,   // how many rows to show in the past
             nextDays: 180,  // for how many days in the future to span
             disabledDays: [6], // 0–Monday...6–Sunday
