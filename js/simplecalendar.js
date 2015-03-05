@@ -1,8 +1,14 @@
 (function($) {
 
-    var $calendar = false;
+
+    // Each $().simplecalendar spawns its own calendar with its own settings (language or size could differ)
+    // To achieve singleton behavior close_registry is introduced. All view_close() functions are stored
+    // in the registry to be called from controller_close().
+    var close_registry = [];
  
     $.fn.simplecalendar = function(options) {
+        var $calendar = false;
+
         var defaults = {
             prerender: false, // prerender calendar on init? 
             visible: false, // show calendar at start (at first encounter)? 
@@ -158,12 +164,15 @@
         }
 
         function view_updateDate(d) {
-            $calendar.find(dotcss('selected')).removeClass(css('selected'));
+            view_removeDate();
             $calendar.find(dotcss('date-'+dateToString(d))).addClass(css('selected'));
+        }
+        function view_removeDate() {
+            $calendar.find(dotcss('selected')).removeClass(css('selected'));            
         }
 
         function view_close() {
-            $calendar.hide();
+            if ($calendar) $calendar.hide();
         }
         function view_open($input) {
             if ($input) {
@@ -173,17 +182,25 @@
                 var offset = $input.offset();
                 offset.top  += offsetTopRel;
                 offset.left += offsetLeftRel;
+                offset.right = 'auto';
 
                 // shift up
                 var shift = 0;
-                shift = $(window).height() - offset.top - $calendar.height() -25; // top up a little to show border
+
+                shift = $(window).height() + $(document).scrollTop() - offset.top - $calendar.height() 
+                        -25; // top up a little to show border
                 if (shift > 0) shift = -$calendar.height()*0.5; // TODO offset.shift
-                if (offset.top + shift < 0) shift = -offset.top + 10; // shift down a bit to show border
+                if (offset.top - $(document).scrollTop() + shift < 0) 
+                        shift = $(document).scrollTop() - offset.top 
+                            +10; // shift down a bit to show border
                 offset['margin-top'] = shift;
 
                 // shift right
                 var shiftLeft = $(window).width() - offset.left - $calendar.width();
-                if (shiftLeft < 0) offset.top = offset.right = 10;
+                if (shiftLeft < 0) {
+                    offset.left = 'auto';
+                    offset.right = 10;
+                }
                     
                 // apply offsets
                 $calendar.css(offset);
@@ -213,7 +230,7 @@
 
             // Close by X
             $calendar.find(dotcss('close')).click(function(){
-                view_close();
+                controller_close();
             })
 
             // Close by click on body
@@ -222,7 +239,7 @@
                 event.stopPropagation();
             })
             $(document).click(function(event){
-                view_close();
+                controller_close();
             })
         }
 
@@ -235,6 +252,7 @@
 
         function controller_open(input) {
             view_prerender();
+            controller_close();
             $input = $(input);
             $input.blur();
             var date = new Date();
@@ -242,7 +260,8 @@
             if (input_val.match(/^[0-9]{1,2}-[0-9]{1,2}-[0-9]{4}$/)) {
                 date = dateFromString(input_val);
                 view_updateDate(date);
-            }
+            } else 
+                view_removeDate();
             view_open($input);
         }
         function e_controller_open(event) {
@@ -257,8 +276,14 @@
                 var dateResult = m[1];
                 view_updateDate(dateFromString(dateResult))
                 $input.val(dateResult);
-                view_close();
+                controller_close();
             }
+        }
+
+        close_registry[ close_registry.length ] = view_close;
+        function controller_close() {
+            for (var i=0; i<close_registry.length; i++)
+                close_registry[i]();
         }
 
         // =====================================================================================
