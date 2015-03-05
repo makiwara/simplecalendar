@@ -74,8 +74,9 @@ div.simplecalendar {
     padding: 10px
 }
 .simplecalendar-body {
+    position: relative;
     background: #e5e5e5;
-    max-height: 254px; /* -1 + X*51px row height */
+    max-height: 254px; /* -1 + X*51px row height */ 
     overflow: hidden;
     overflow-y: scroll;
     margin-right: -20px;

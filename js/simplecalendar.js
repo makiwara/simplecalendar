@@ -146,9 +146,8 @@
                 $body.append($w);
             }
             $calendar.hide();
-            $calendar.appendTo($('body'))
-            // bind events inside the calendar
-            view_bind()
+            $calendar.appendTo($('body'));
+            view_bind();
         }
 
         function view_updateMonth() {
@@ -165,10 +164,19 @@
 
         function view_updateDate(d) {
             view_removeDate();
-            $calendar.find(dotcss('date-'+dateToString(d))).addClass(css('selected'));
+            $calendar.find(dotcss('date-'+dateToString(d))).addClass(css('selected'))
         }
         function view_removeDate() {
             $calendar.find(dotcss('selected')).removeClass(css('selected'));            
+        }
+
+        function view_updateScroll() {
+            var scrollTop = 0;
+            $calendar.find(dotcss('body')).scrollTop(0)
+            $calendar.find(dotcss('selected')).each(function(){
+                scrollTop = $(this).position().top - settings.prevWeeks*rowHeight;
+            })
+            $calendar.find(dotcss('body')).scrollTop(scrollTop)
         }
 
         function view_close() {
@@ -178,6 +186,7 @@
             if ($input) {
                 var offsetLeftRel = settings.offset.left; // TODO percents
                 var offsetTopRel  = $input.height()*0.5; // TODO offset.top
+                var offsetShift   = $calendar.height()*0.5; // TODO offset.shift
                 
                 var offset = $input.offset();
                 offset.top  += offsetTopRel;
@@ -186,13 +195,12 @@
 
                 // shift up
                 var shift = 0;
-
                 shift = $(window).height() + $(document).scrollTop() - offset.top - $calendar.height() 
                         -25; // top up a little to show border
-                if (shift > 0) shift = -$calendar.height()*0.5; // TODO offset.shift
+                if (shift > 0) shift = -offsetShift;
                 if (offset.top - $(document).scrollTop() + shift < 0) 
                         shift = $(document).scrollTop() - offset.top 
-                            +10; // shift down a bit to show border
+                                +10; // shift down a bit to show border
                 offset['margin-top'] = shift;
 
                 // shift right
@@ -211,6 +219,7 @@
                     $calendar.find(dotcss('angle')).show(); 
             }
             $calendar.show();
+            view_updateScroll();
             view_updateMonth();
         }
 
