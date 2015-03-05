@@ -16,6 +16,11 @@
                 weekdays: ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'], 
                 startsSunday: false,
             },
+            offset: { // TODO: % values for left and top; right positioning as well
+                left: 40,
+                top: '50%', // of input height TODO
+                shift: '50%' // of calendar height TODO
+            },
             cssPrefix: 'simplecalendar'
         };
         var settings = $.extend({}, defaults, options);
@@ -86,13 +91,15 @@
             if ($calendar !== false) return;
             $calendar = $('<div>').addClass(settings.cssPrefix);
             $calendar
-                .append($('<div>').addClass(css('angle')))
-                .append($('<div>').addClass(css('head'))
-                    .append($('<div>').addClass(css('close')).html('&times;'))
-                    .append($('<div>').addClass(css('month')))
-                    .append($('<div>').addClass(css('week')))
+                .append($('<div>').addClass(css('padding'))
+                    .append($('<div>').addClass(css('angle')))
+                    .append($('<div>').addClass(css('head'))
+                        .append($('<div>').addClass(css('close')).html('&times;'))
+                        .append($('<div>').addClass(css('month')))
+                        .append($('<div>').addClass(css('week')))
+                    )
+                    .append($('<div>').addClass(css('bodywrap')).append($('<div>').addClass(css('body'))))
                 )
-                .append($('<div>').addClass(css('bodywrap')).append($('<div>').addClass(css('body'))))
 
             // build weekday title
             var $week = $calendar.find(dotcss('week'));
@@ -114,6 +121,7 @@
                 var $w = $('<div>').addClass(css('row'));
                 for (var i=0; i<7; i++) {
                     var $day = $('<div>').html(day.getDate())
+                    $day.addClass(css('date-'+dateToString(day)));
                     if (day.getDate() == 1) {
                         $day.prepend($('<div>').addClass(css('split')).html(getShortMonth(day)))
                         monthHeights[ monthHeights.length ] = [monthHeight, day.getMonth(), day.getFullYear()];
@@ -131,6 +139,10 @@
                 $w.append($('<br clear="all">'))
                 $body.append($w);
             }
+            $calendar.hide();
+            $calendar.appendTo($('body'))
+            // bind events inside the calendar
+            view_bind()
         }
 
         function view_updateMonth() {
@@ -145,18 +157,108 @@
             )
         }
 
+        function view_updateDate(d) {
+            $calendar.find(dotcss('selected')).removeClass(css('selected'));
+            $calendar.find(dotcss('date-'+dateToString(d))).addClass(css('selected'));
+        }
+
+        function view_close() {
+            $calendar.hide();
+        }
+        function view_open($input) {
+            if ($input) {
+                var offsetLeftRel = settings.offset.left; // TODO percents
+                var offsetTopRel  = $input.height()*0.5; // TODO offset.top
+                
+                var offset = $input.offset();
+                offset.top  += offsetTopRel;
+                offset.left += offsetLeftRel;
+
+                // shift up
+                var shift = 0;
+                shift = $(window).height() - offset.top - $calendar.height() -25; // top up a little to show border
+                if (shift > 0) shift = -$calendar.height()*0.5; // TODO offset.shift
+                if (offset.top + shift < 0) shift = -offset.top + 10; // shift down a bit to show border
+                offset['margin-top'] = shift;
+
+                // shift right
+                var shiftLeft = $(window).width() - offset.left - $calendar.width();
+                if (shiftLeft < 0) offset.top = offset.right = 10;
+                    
+                // apply offsets
+                $calendar.css(offset);
+                $calendar.find(dotcss('angle')).css({'margin-top':-shift-20})
+                if (-shiftLeft > offsetLeftRel - 20) // to make sure angle is pointed into <input>
+                   $calendar.find(dotcss('angle')).hide();
+                else
+                    $calendar.find(dotcss('angle')).show(); 
+            }
+            $calendar.show();
+            view_updateMonth();
+        }
+
+        function view_bind() {
+
+            // Update month display on scroll
+            var to_scroll;
+            $calendar.find(dotcss('body')).scroll(function(){
+                clearTimeout(to_scroll);
+                to_scroll = setTimeout(view_updateMonth, 50);
+            })
+
+            // Select day on click 
+            $calendar.find(dotcss('row')+" > div").click(function(){
+                controller_select(this);
+            })
+
+            // Close by X
+            $calendar.find(dotcss('close')).click(function(){
+                view_close();
+            })
+
+            // Close by click on body
+            // TODO refactor
+            $calendar.click(function(event){
+                event.stopPropagation();
+            })
+            $(document).click(function(event){
+                view_close();
+            })
+        }
+
 
         // =====================================================================================
         // =====================================================================================
         // CONTROLLERS (open, close, select)
         // =====================================================================================
+        var $input;
 
         function controller_open(input) {
             view_prerender();
-            // TODO gather input data
-            // TODO patch calendar view
-            $calendar.insertBefore(input).show();
-            view_updateMonth();
+            $input = $(input);
+            $input.blur();
+            var date = new Date();
+            var input_val = $(input).val();
+            if (input_val.match(/^[0-9]{1,2}-[0-9]{1,2}-[0-9]{4}$/)) {
+                date = dateFromString(input_val);
+                view_updateDate(date);
+            }
+            view_open($input);
+        }
+        function e_controller_open(event) {
+            controller_open(this);
+            event.stopPropagation();
+        }
+
+        function controller_select(day) {
+            var $day = $(day);
+            if (!$day.hasClass(css('disabled'))) {
+                m = day.className.match(css('date-')+'([0-9]{2}-[0-9]{2}-[0-9]{4})');
+                var dateResult = m[1];
+                view_updateDate(dateFromString(dateResult))
+                $input.val(dateResult);
+                view_close();
+            }
         }
 
         // =====================================================================================
@@ -166,12 +268,8 @@
         if (settings.prerender) view_prerender();
         var isVisible = false
         return this.each(function() {
-            var to_scroll;
-            $calendar.find(dotcss('body')).scroll(function(){
-                clearTimeout(to_scroll);
-                to_scroll = setTimeout(view_updateMonth, 50);
-            })
-            // TODO bind focus events
+            $(this).click(e_controller_open)
+                   .focus(e_controller_open)
 
             if (settings.visible && !isVisible) {
                 isVisible = true;
