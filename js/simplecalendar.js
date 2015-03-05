@@ -10,10 +10,11 @@
         var $calendar = false;
 
         var defaults = {
-            prerender: false, // prerender calendar on init? 
-            visible: false, // show calendar at start (at first encounter)? 
-            prevWeeks: 2,   // how many rows to show in the past
-            nextDays: 180,  // for how many days in the future to span
+            prerender: true,   // prerender calendar on init? 
+            visible: false,    // show calendar at start (at first encounter)? 
+            prevWeeks: 2,      // how many rows to show in the past
+            nextDays: 180,     // for how many days in the future to span
+            rows: 8,           // how many rows in calendar popup?
             disabledDays: [6], // 0–Monday...6–Sunday (even if starts from Sunday)
             disabledDates: ['11-03-2015'], //  Dates or 'dd-mm-yyyy'
             anchorDate: false, // to anchor not on today
@@ -22,10 +23,10 @@
                 weekdays: ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'], 
                 startsSunday: false
             },
-            offset: { // TODO: % values for left and top; right positioning as well
-                left: 40,
-                top: '50%', // of input height TODO
-                shift: '50%' // of calendar height TODO
+            offset: { 
+                left: 100,  // px or % of input width
+                top: '50%', // px or % of input height 
+                shift: '50%' // px or % of calendar height
             },
             cssPrefix: 'simplecalendar'
         };
@@ -145,6 +146,7 @@
                 $w.append($('<br clear="all">'))
                 $body.append($w);
             }
+            $body.css({ 'max-height' : settings.rows*rowHeight -1 })
             $calendar.hide();
             $calendar.appendTo($('body'));
             view_bind();
@@ -182,11 +184,16 @@
         function view_close() {
             if ($calendar) $calendar.hide();
         }
+        function _pct(value, target) {
+            if (typeof value === 'string' && value.match(/^[0-9]+%$/))
+                return target*parseFloat(value.replace(/%/, ''))/100;
+            return value;
+        }
         function view_open($input) {
             if ($input) {
-                var offsetLeftRel = settings.offset.left; // TODO percents
-                var offsetTopRel  = $input.height()*0.5; // TODO offset.top
-                var offsetShift   = $calendar.height()*0.5; // TODO offset.shift
+                var offsetLeftRel = _pct(settings.offset.left,  $input.width());
+                var offsetTopRel  = _pct(settings.offset.top,   $input.height());
+                var offsetShift   = _pct(settings.offset.shift, $calendar.height());
                 
                 var offset = $input.offset();
                 offset.top  += offsetTopRel;
@@ -224,7 +231,6 @@
         }
 
         function view_bind() {
-
             // Update month display on scroll
             var to_scroll;
             $calendar.find(dotcss('body')).scroll(function(){
@@ -243,13 +249,8 @@
             })
 
             // Close by click on body
-            // TODO refactor
-            $calendar.click(function(event){
-                event.stopPropagation();
-            })
-            $(document).click(function(event){
-                controller_close();
-            })
+            $calendar.click(function(event){ event.stopPropagation(); });
+            $(document).click(function(event){ controller_close(); });
         }
 
 

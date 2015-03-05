@@ -58,10 +58,11 @@ $('input#byid').simplecalendar();</code></pre>
         </p>
 
 <pre><code>var defaults = {
-    prerender: false, 
+    prerender: true, 
     visible: false, 
     prevWeeks: 2,   
-    nextDays: 180,  
+    nextDays: 180, 
+    rows: 8, 
     disabledDays: [6], // 0–Monday...6–Sunday
     disabledDates: ['11-03-2015'], //  Dates or 'dd-mm-yyyy'
     anchorDate: false, 
@@ -73,9 +74,9 @@ $('input#byid').simplecalendar();</code></pre>
         startsSunday: false
     },
     offset: { 
-        left: 40,
-        top: '50%', 
-        shift: '50%' 
+        left: 100,   // px or % of input width
+        top: '50%',  // px or % of input height
+        shift: '50%' // px or % of calendar height
     },
     cssPrefix: 'simplecalendar'
 };</code></pre>
