@@ -205,10 +205,10 @@
                 offset.right = 'auto';
 
                 // shift up
-                var shift = 0;
-                shift = $(window).height() + $(document).scrollTop() - offset.top - $calendar.height() 
+                var shift = $(window).height() + $(document).scrollTop() - offset.top - $calendar.height() 
                         -25; // top up a little to show border
-                if (shift > 0) shift = -offsetShift;
+                if (shift > -offsetShift) shift = -offsetShift;
+                console.log(shift)
                 if (offset.top - $(document).scrollTop() + shift < 0) 
                         shift = $(document).scrollTop() - offset.top 
                                 +10; // shift down a bit to show border
