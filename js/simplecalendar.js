@@ -4,8 +4,8 @@
  
     $.fn.simplecalendar = function(options) {
         var defaults = {
-            prerender: true, // prerender calendar on init? TODO set to false
-            visible: true, // show calendar at start (at first encounter)? TODO set to false
+            prerender: false, // prerender calendar on init? 
+            visible: false, // show calendar at start (at first encounter)? 
             prevWeeks: 2,   // how many rows to show in the past
             nextDays: 180,  // for how many days in the future to span
             disabledDays: [6], // 0–Monday...6–Sunday (even if starts from Sunday)
@@ -14,7 +14,7 @@
             languagePackage: {
                 months: ['JANUARY', 'FEBRUARY', 'MARCH', 'APRIL', 'MAY', 'JUNE', 'JULY', 'AUGUST', 'SEMPTEMBER', 'OCTOBER', 'NOVEMBER', 'DECEMBER'],
                 weekdays: ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'], 
-                startsSunday: false,
+                startsSunday: false
             },
             offset: { // TODO: % values for left and top; right positioning as well
                 left: 40,
@@ -24,7 +24,7 @@
             cssPrefix: 'simplecalendar'
         };
         var settings = $.extend({}, defaults, options);
-        // Patch settings a little bit: prepare correct anchor date, disabled dates, 
+        // Let's patch settings a little bit: prepare correct anchor date, disabled dates, 
         // and shift disabledDays/weekdays if startsSunday
         if (settings.anchorDate === false) settings.anchorDate = new Date();
         if (typeof settings.anchorDate == 'string') settings.anchorDate = dateFromString(settings.anchorDate);

@@ -18,24 +18,96 @@
             <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
 
-        
-        <h2>Simple calendar test</h2>
+        <h1>This is <span style='font-weight:100'>simplecalendar</span> demo</h1>
 
-        <h2>Simple calendar test</h2>
-        <h2>Simple calendar test</h2>
+        <p>
+            The <em>simplecalendar</em> plugin enhances datetime inputs: 
+            <input class="datetime" type="text" value="25-03-2015">
+        </p>
+
+        <h2>Usage</h2>
+
+        <p>
+            The <em>simplecalendar</em> is a jQuery plugin which is used in a conventional way:
+        <p>
+
+<pre><code>$('input.datetime').simplecalendar();
+$('input#byid').simplecalendar();</code></pre>
+
+        <p>
+            When user clicks on designated input, a calendar pop-up would be displayed nearby.
+            The input would be popuplated with selected datetime in <code>dd-mm-yy</code> format;
+            let us look at the sample below.
+        </p>
+
+        <label>
+            Please specify delivery date:
+            <input type="text" id="byid">
+        </label>
+
+
+        <h2>Configuration options</h2>
+
+        <p>
+            Plugin provides a lot of options to modify its behavior: starting from pop-up height,
+            disabled days and holidays and up to language and i18n customisation.
+        </p>
+        <p>
+            Let us hope the following code sample with default values would be enough
+            to overview customisation capabilites of the plugin.
+        </p>
+
+<pre><code>var defaults = {
+    prerender: false, 
+    visible: false, 
+    prevWeeks: 2,   
+    nextDays: 180,  
+    disabledDays: [6], // 0–Monday...6–Sunday
+    disabledDates: ['11-03-2015'], //  Dates or 'dd-mm-yyyy'
+    anchorDate: false, 
+    languagePackage: {
+        months: ['JANUARY', 'FEBRUARY', 'MARCH', 'APRIL', 
+                 'MAY', 'JUNE', 'JULY', 'AUGUST', 'SEMPTEMBER', 
+                 'OCTOBER', 'NOVEMBER', 'DECEMBER'],
+        weekdays: ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'], 
+        startsSunday: false
+    },
+    offset: { 
+        left: 40,
+        top: '50%', 
+        shift: '50%' 
+    },
+    cssPrefix: 'simplecalendar'
+};</code></pre>
+
+        <h2>Authorship &amp; copyright</h2>
+
+        <p>
+            This simple calendar plugin was made by Nikolay Yaremko. Sources are available on GitHub:
+            <a href="http://github.com/makiwara/simplecalendar">github.com/makiwara/simplecalendar</a>.
+            You are free to use these sources as you will.
+        </p>
+
+        <h2>Yet another samples of usage</h2>
+        <div style="float:right">
+            <label>
+                Simple input<br>
+                <input type="text" class="datetime">
+            </label>
+        </div>
 
         <label>
             Simple input<br>
-            <input type="text" id="id-simple">
+            <input type="text" class="datetime">
         </label>
 
-        <p style="width: 300px">
-            Doodling on a piece of paper while listening to a boring lecture or phone conversation actually helps concentration and can make facts easier to recall [...] One possibility is that doodling reduces daydreaming in situations where daydreaming might harm performance more than scribbling on a piece of paper
+
+        <p>
+            Please note these particular inputs are located at unusual places: the calendar plugin handles this
+            situation and displays pop-up within screen.
         </p>
 
-        <p style="width: 300px">
-            Doodling on a piece of paper while listening to a boring lecture or phone conversation actually helps concentration and can make facts easier to recall [...] One possibility is that doodling reduces daydreaming in situations where daydreaming might harm performance more than scribbling on a piece of paper
-        </p>
+
 
 
         <!-- ================================================ -->
@@ -43,7 +115,8 @@
         <script>window.jQuery||document.write('<script src=js/vendor/jquery-1.11.1.min.js><\/script>')</script>
         <script src="js/simplecalendar.js"></script>
         <script type="text/javascript">
-            $('#id-simple').simplecalendar()
+            $('.datetime').simplecalendar()
+            $('#byid').simplecalendar()
         </script>
     </body>
 </html>

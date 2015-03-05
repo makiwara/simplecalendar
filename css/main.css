@@ -60,9 +60,18 @@ textarea {
    Author's custom styles
    ========================================================================== */
 body {
-    padding: 50px;
+    padding: 10px 50px;
 }
 
+pre {
+    padding: 10px;
+    background: #ffffe0;
+    width: 650px;
+}
+
+p {
+    max-width: 600px
+}
 
 /* ==========================================================================
    Helper classes
