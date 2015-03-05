@@ -35,10 +35,22 @@
                 settings.languagePackage.weekdays[i+1] = settings.languagePackage.weekdays[i];
             settings.languagePackage.weekdays[0] = sunday;
         }
-        // prepare
-        if (settings.prerender) prerender();
+        // prepare and bind
+        if (settings.prerender) view_prerender();
+        var isVisible = false
+        return this.each(function() {
+            if (settings.visible && !isVisible) {
+                isVisible = true;
+                controller_open(this);
+            }
+            // TODO bind focus events
+        });
 
+        // =====================================================================================
+        // =====================================================================================
         // Utility functions
+        // =====================================================================================
+
         function css(suffix) { return settings.cssPrefix+'-'+suffix }
         function dotcss(suffix) { return '.'+css(suffix) }
         function dateFromString(s) { // dd-mm-yyyy
@@ -72,8 +84,13 @@
             return [month.charAt(0), month.charAt(1), month.charAt(2)].join(" ");
         }
         
-        // HTML RENDER
-        function prerender() {
+
+        // =====================================================================================
+        // =====================================================================================
+        // VIEW (rendering, patching)
+        // =====================================================================================
+
+        function view_prerender() {
             if ($calendar !== false) return;
             $calendar = $('<div>').addClass(settings.cssPrefix);
             $calendar
@@ -117,135 +134,24 @@
                 $w.append($('<br clear="all">'))
                 $body.append($w);
             }
-
         }
 
-        // CONTROLLER FUNCTIONS
-        function open(input) {
+        function view_updateMonth() {
+            $calendar.find(dotcss('body'))
+        }
+
+
+        // =====================================================================================
+        // =====================================================================================
+        // CONTROLLERS (open, close, select)
+        // =====================================================================================
+
+        function controller_open(input) {
             prerender();
             // TODO gather input data
             // TODO patch calendar view
             $calendar.insertBefore(input).show();
+            view_updateMonth()
         }
-
-        // INITIALISATION & EVENT BINDING
-        var isVisible = false
-        return this.each(function() {
-            if (settings.visible && !isVisible) {
-                isVisible = true;
-                open(this);
-            }
-            // TODO bind focus events
-        });
-
     };
-/*
-
-    <div class="simplecalendar">
-        <div class="simplecalendar-angle"></div>
-        <div class="simplecalendar-head">
-            <div class="simplecalendar-close">&times;</div>
-            <div class="simplecalendar-month">
-                SEPTEMBER 2015
-            </div>
-            <div class="simplecalendar-week">
-                <div>Ma</div>
-                <div>Di</div>
-                <div>Wo</div>
-                <div>Do</div>
-                <div>Fr</div>
-                <div>Za</div>
-                <div class="simplecalendar-disabled">Zo</div>
-                <br clear="all">
-            </div>
-        </div>
-        <div class="simplecalendar-bodywrap"><div class="simplecalendar-body">
-            <div class="simplecalendar-row">
-                <div class="simplecalendar-disabled">1</div>
-                <div class="simplecalendar-disabled">2</div>
-                <div class="simplecalendar-disabled">3</div>
-                <div>4</div>
-                <div class="simplecalendar-selected">5</div>
-                <div>6</div>
-                <div class="simplecalendar-disabled">7</div>
-                <br clear="all">
-            </div>
-            <div class="simplecalendar-row">
-                <div>8</div>
-                <div>9</div>
-                <div>
-                    <div class="simplecalendar-split">O K T</div>
-                    1
-                </div>
-                <div>11</div>
-                <div>12</div>
-                <div>13</div>
-                <div class="simplecalendar-disabled">14</div>
-                <br clear="all">
-            </div>
-            <div class="simplecalendar-row">
-                <div>15</div>
-                <div>16</div>
-                <div>17</div>
-                <div>18</div>
-                <div>19</div>
-                <div>20</div>
-                <div class="simplecalendar-disabled">21</div>
-                <br clear="all">
-            </div>
-            <div class="simplecalendar-row">
-                <div>15</div>
-                <div>16</div>
-                <div>17</div>
-                <div>18</div>
-                <div>19</div>
-                <div>20</div>
-                <div class="simplecalendar-disabled">21</div>
-                <br clear="all">
-            </div>
-            <div class="simplecalendar-row">
-                <div>15</div>
-                <div>16</div>
-                <div>17</div>
-                <div>18</div>
-                <div>19</div>
-                <div>20</div>
-                <div class="simplecalendar-disabled">21</div>
-                <br clear="all">
-            </div>
-            <div class="simplecalendar-row">
-                <div>15</div>
-                <div>16</div>
-                <div>17</div>
-                <div>18</div>
-                <div>19</div>
-                <div>20</div>
-                <div class="simplecalendar-disabled">21</div>
-                <br clear="all">
-            </div>
-            <div class="simplecalendar-row">
-                <div>15</div>
-                <div>16</div>
-                <div>17</div>
-                <div>18</div>
-                <div>19</div>
-                <div>20</div>
-                <div class="simplecalendar-disabled">21</div>
-                <br clear="all">
-            </div>
-            <div class="simplecalendar-row">
-                <div>15</div>
-                <div>16</div>
-                <div>17</div>
-                <div>18</div>
-                <div>19</div>
-                <div>20</div>
-                <div class="simplecalendar-disabled">21</div>
-                <br clear="all">
-            </div>
-        </div></div>
-    </div>
-*/
-
- 
 }( jQuery ));
