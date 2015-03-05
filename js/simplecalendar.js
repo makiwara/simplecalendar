@@ -14,7 +14,7 @@
             languagePackage: {
                 months: ['JANUARY', 'FEBRUARY', 'MARCH', 'APRIL', 'MAY', 'JUNE', 'JULY', 'AUGUST', 'SEMPTEMBER', 'OCTOBER', 'NOVEMBER', 'DECEMBER'],
                 weekdays: ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'], 
-                startsSunday: false, // TODO support
+                startsSunday: false,
             },
             cssPrefix: 'simplecalendar'
         };
@@ -31,20 +31,10 @@
             for (var i=0; i<settings.disabledDays.length; i++)
                 settings.disabledDays[i] = (settings.disabledDays[i]+1)%7;
             var sunday = settings.languagePackage.weekdays[ settings.languagePackage.weekdays.length-1 ];
-            for (var i=0; i<settings.languagePackage.weekdays.length-1; i++)
+            for (var i=settings.languagePackage.weekdays.length-2; i>=0; i--)
                 settings.languagePackage.weekdays[i+1] = settings.languagePackage.weekdays[i];
             settings.languagePackage.weekdays[0] = sunday;
         }
-        // prepare and bind
-        if (settings.prerender) view_prerender();
-        var isVisible = false
-        return this.each(function() {
-            if (settings.visible && !isVisible) {
-                isVisible = true;
-                controller_open(this);
-            }
-            // TODO bind focus events
-        });
 
         // =====================================================================================
         // =====================================================================================
@@ -89,6 +79,8 @@
         // =====================================================================================
         // VIEW (rendering, patching)
         // =====================================================================================
+        var rowHeight = 51;
+        var monthHeights = [];
 
         function view_prerender() {
             if ($calendar !== false) return;
@@ -116,12 +108,16 @@
             var day0    = findDay0   (settings.anchorDate, settings.prevWeeks*7);
             var dayLast = findDayLast(settings.anchorDate, settings.nextDays);
             var day = day0;
+            monthHeights[0] = [0, day.getMonth(), day.getFullYear()];
+            var monthHeight =0;
             while (day < dayLast) {
                 var $w = $('<div>').addClass(css('row'));
                 for (var i=0; i<7; i++) {
                     var $day = $('<div>').html(day.getDate())
-                    if (day.getDate() == 1) 
+                    if (day.getDate() == 1) {
                         $day.prepend($('<div>').addClass(css('split')).html(getShortMonth(day)))
+                        monthHeights[ monthHeights.length ] = [monthHeight, day.getMonth(), day.getFullYear()];
+                    }
                     var weekday = day.getDay();
                     if (!settings.languagePackage.startsSunday) weekday = (weekday+6)%7;
                     if ((day < settings.anchorDate) ||
@@ -131,13 +127,22 @@
                     $w.append($day);
                     day.setDate(day.getDate()+1);
                 }
+                monthHeight += rowHeight;
                 $w.append($('<br clear="all">'))
                 $body.append($w);
             }
         }
 
         function view_updateMonth() {
-            $calendar.find(dotcss('body'))
+            var scroll = $calendar.find(dotcss('body')).scrollTop();
+            var i;
+            for (i=0; i<monthHeights.length; i++) {
+                if (scroll < monthHeights[i][0]) break;
+            }
+            var month = monthHeights[i-1];
+            $calendar.find(dotcss('month')).html(
+                settings.languagePackage.months[monthHeights[i-1][1]] + " " + monthHeights[i-1][2]
+            )
         }
 
 
@@ -147,11 +152,32 @@
         // =====================================================================================
 
         function controller_open(input) {
-            prerender();
+            view_prerender();
             // TODO gather input data
             // TODO patch calendar view
             $calendar.insertBefore(input).show();
-            view_updateMonth()
+            view_updateMonth();
         }
+
+        // =====================================================================================
+        // =====================================================================================
+        // ACTION!
+        // =====================================================================================
+        if (settings.prerender) view_prerender();
+        var isVisible = false
+        return this.each(function() {
+            var to_scroll;
+            $calendar.find(dotcss('body')).scroll(function(){
+                clearTimeout(to_scroll);
+                to_scroll = setTimeout(view_updateMonth, 50);
+            })
+            // TODO bind focus events
+
+            if (settings.visible && !isVisible) {
+                isVisible = true;
+                controller_open(this);
+            }
+        });
+
     };
 }( jQuery ));
