@@ -225,7 +225,7 @@
                 $calendar.css(offset);
                 $calendar.find(dotcss('angle')).css({'margin-top':-shift-20})
                 // Let us make sure angle is pointed into <input>
-                if ((-shiftLeft > offsetLeftRel - 20) || (shift > -15))
+                if ((-shiftLeft > offsetLeftRel - 20) || (shift > -15) || (shift < -$calendar.height()))
                     $calendar.find(dotcss('angle')).hide();
                 else
                     $calendar.find(dotcss('angle')).show(); 
