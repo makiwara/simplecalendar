@@ -8,6 +8,7 @@
  
     $.fn.simplecalendar = function(options) {
         var $calendar = false;
+        var $curtain  = false;
 
         var defaults = {
             prerender: true,   // prerender calendar on init? 
@@ -96,6 +97,7 @@
 
         function view_prerender() {
             if ($calendar !== false) return;
+
             $calendar = $('<div>').addClass(settings.cssPrefix);
             $calendar
                 .append($('<div>').addClass(css('padding'))
@@ -149,6 +151,7 @@
             $body.css({ 'max-height' : settings.rows*rowHeight -1 })
             $calendar.hide();
             $calendar.appendTo($('body'));
+            $curtain = $('<div>').addClass(css('curtain')).appendTo($('body'));
             view_bind();
         }
 
@@ -182,6 +185,7 @@
         }
 
         function view_close() {
+            view_hideCurtain()
             if ($calendar) $calendar.hide();
         }
         function _pct(value, target) {
@@ -220,14 +224,32 @@
                 // apply offsets
                 $calendar.css(offset);
                 $calendar.find(dotcss('angle')).css({'margin-top':-shift-20})
-                if (-shiftLeft > offsetLeftRel - 20) // to make sure angle is pointed into <input>
-                   $calendar.find(dotcss('angle')).hide();
+                // Let us make sure angle is pointed into <input>
+                if ((-shiftLeft > offsetLeftRel - 20) || (shift > -15))
+                    $calendar.find(dotcss('angle')).hide();
                 else
                     $calendar.find(dotcss('angle')).show(); 
             }
             $calendar.show();
+            view_showCurtain()
             view_updateScroll();
             view_updateMonth();
+        }
+
+        var _overflow = false;
+        function view_showCurtain() {
+            if ($curtain) {
+                $curtain.show();
+                _overflow = $(document.body).css('overflow');
+                $(document.body).css({ overflow: 'hidden' })
+            }
+        }
+        function view_hideCurtain() {
+            if ($curtain) {
+                $curtain.hide();
+                if (_overflow !== false)
+                    $(document.body).css({ overflow: _overflow })
+            }
         }
 
         function view_bind() {
@@ -239,8 +261,9 @@
             })
 
             // Select day on click 
-            $calendar.find(dotcss('row')+" > div").click(function(){
+            $calendar.find(dotcss('row')+" > div").click(function(event){
                 controller_select(this);
+                event.stopPropagation();
             })
 
             // Close by X
@@ -248,9 +271,8 @@
                 controller_close();
             })
 
-            // Close by click on body
-            $calendar.click(function(event){ event.stopPropagation(); });
-            $(document).click(function(event){ controller_close(); });
+            // Close by click on curtain
+            $curtain.click(function(event){ controller_close(); });
         }
 
 
@@ -258,13 +280,12 @@
         // =====================================================================================
         // CONTROLLERS (open, close, select)
         // =====================================================================================
-        var $input;
+        var $input = false;
 
         function controller_open(input) {
             view_prerender();
-            controller_close();
+            controller_closeAll();
             $input = $(input);
-            $input.blur();
             var date = new Date();
             var input_val = $(input).val();
             if (input_val.match(/^[0-9]{1,2}-[0-9]{1,2}-[0-9]{4}$/)) {
@@ -273,10 +294,12 @@
             } else 
                 view_removeDate();
             view_open($input);
+            $input.focus();
         }
-        function e_controller_open(event) {
-            controller_open(this);
+        function e_controller_open(input, event) {
             event.stopPropagation();
+            if ($input && $input.is(input)) return false;
+            controller_open(input);
         }
 
         function controller_select(day) {
@@ -290,11 +313,15 @@
             }
         }
 
-        close_registry[ close_registry.length ] = view_close;
         function controller_close() {
-            for (var i=0; i<close_registry.length; i++)
-                close_registry[i]();
+            view_close();
+            $input = false;
         }
+        function controller_closeAll() {
+            for (var i=0; i<close_registry.length; i++)
+                close_registry[i]();            
+        }
+        close_registry[ close_registry.length ] = controller_close;
 
         // =====================================================================================
         // =====================================================================================
@@ -303,8 +330,9 @@
         if (settings.prerender) view_prerender();
         var isVisible = false
         return this.each(function() {
-            $(this).click(e_controller_open)
-                   .focus(e_controller_open)
+            $(this).click(function(event){ e_controller_open(this, event) })
+                   .focus(function(event){ var that = this; setTimeout(function(){ e_controller_open(that, event) }, 100) })
+                   .blur (function(event){ setTimeout(controller_close, 100) })
 
             if (settings.visible && !isVisible) {
                 isVisible = true;
