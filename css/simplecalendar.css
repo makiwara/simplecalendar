@@ -48,9 +48,8 @@
     background: linear-gradient(to bottom,  rgba(250,250,250,1) 0%,rgba(230,230,230,1) 100%); /* W3C */
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fafafa', endColorstr='#e6e6e6',GradientType=0 ); /* IE6-9 */
 }
-.simplecalendar-week :nth-child(7) {
-    margin-right: 0;
-}
+.simplecalendar-week :first-child + * + * + * + * + * + * { margin-right: 0 }
+.simplecalendar-week :nth-child(7)                        { margin-right: 0 }
 .simplecalendar-week > div.simplecalendar-disabled {
     color: #888888;
 }
@@ -66,6 +65,7 @@
 div.simplecalendar { 
     position: absolute; 
     box-shadow: 0 0 15px rgba(0,0,0,.5);
+    /* behavior: url(css/PIE.htc); <--- You can introduce this behavior instead of PIE.js */
     background-color: #ffffff;
     margin: 0;
     padding: 0;
@@ -75,7 +75,9 @@ div.simplecalendar-curtain {
     position: fixed;
     top: 0; left: 0; right: 0; bottom: 0;
     width: 100%; height: 100%;
-    background: rgba(0,0,0,0.25);
+    background: #000000;
+    filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=25);
+    opacity: 0.25;
     display: none;
 }
 .simplecalendar-padding {
@@ -119,9 +121,8 @@ div.simplecalendar-curtain {
 .simplecalendar-row > div.simplecalendar-disabled:hover {
     background: #ffffff;
 }
-.simplecalendar-row :nth-child(7) {
-    margin-right: 0;
-}
+.simplecalendar-row :first-child + * + * + * + * + * + * { margin-right: 0 } 
+.simplecalendar-row :nth-child(7)                        { margin-right: 0 }
 .simplecalendar-body :last-child > div {
     margin-bottom: 0;
 }

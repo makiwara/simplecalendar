@@ -28,7 +28,6 @@ Another way to get rid of CSS is to hardcode it into javascript library. I consi
 It is not possible to determine exact padding from the PDF, as well as font families and sizes; I took the liberty to use Arial as primary font-face and to adjust paddings, margins and sizes by myself.
 
 ## Browser support
-The plugin was developed using Chrome. I have tested the plugin in Safari, Firefox, Opera and MSIE 10 so far; it worked perfectly with no patches required. 
+The plugin was developed using Chrome. I have tested the plugin in Safari, Firefox, Opera and MSIE 8, 9, 10 so far; it worked perfectly with almost no patches required. 
 
-MSIE 8/9 tests are on the way (modern.ie machines are too heavy to download via mobile internet).
-
+I have used PIE (http://css3pie.com/) to provide box-shadow for the calendar pop-up in MSIE 8, because the latter does not support box-shadow property.

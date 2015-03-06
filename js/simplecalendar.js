@@ -6,6 +6,24 @@
     ************************************************* */
 (function($) {
 
+
+    // Install polyfill for .indexOf
+    if (!Array.prototype.indexOf) {
+        Array.prototype.indexOf = function(searchElement, fromIndex) {
+            var k;
+            if (this == null) throw new TypeError('"this" is null or not defined');
+            var O = Object(this);
+            var len = O.length >>> 0;
+            if (len === 0) return -1;
+            var n = +fromIndex || 0;
+            if (Math.abs(n) === Infinity) n = 0;
+            if (n >= len) return -1;
+            k = Math.max(n >= 0 ? n : len - Math.abs(n), 0);
+            while (k < len) if (k in O && O[k] === searchElement) return k; else k++;
+            return -1;
+        };
+    }
+
     // The code is split into following parts:
     // 1) settings and defaults — this is where defaults are introduced and modified
     // 2) utility — functions to help with common operations such as date transformation and className generation
@@ -181,6 +199,9 @@
             $curtain = $('<div>').addClass(css('curtain')).appendTo($('body'));
             $calendar.appendTo($('body'));
             view_bind();
+
+            // connect with PIE.js to build up borders
+            if (window.PIE) $calendar.each(function(){ PIE.attach(this) })
 
             // update rowHeight and dependants
             $calendar.find(dotcss('row')).first().each(function(){ rowHeight = $(this).height() });
@@ -378,7 +399,7 @@
          * Event handler wrapper for controller_open()
          */
         function e_controller_open(input, event) {
-            event.stopPropagation();
+            if (event) event.stopPropagation();
             if ($input && $input.is(input)) return false;
             controller_open(input);
         }
@@ -425,7 +446,7 @@
         return this.filter('input').each(function() {
             // bind click, focus and blur events
             $(this).click(function(event){ e_controller_open(this, event) })
-                   .focus(function(event){ var that = this; setTimeout(function(){ e_controller_open(that, event) }, 100) })
+                   .focus(function(event){ var that = this; setTimeout(function(){ e_controller_open(that) }, 100) })
                    .blur (function(event){ setTimeout(controller_close, 100) })
 
             // open first calendar if required by options

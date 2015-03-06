@@ -11,7 +11,6 @@
         <link rel="stylesheet" href="css/normalize.min.css">
         <link rel="stylesheet" href="css/main.css">
         <link rel="stylesheet" href="css/simplecalendar.css">
-        <script src="js/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script>
     </head>
     <body><form>
         <!--[if lt IE 7]>
@@ -112,6 +111,9 @@ $('input#byid').simplecalendar();</code></pre>
 
 
         <!-- ================================================ -->
+        <!--[if IE]>
+            <script type="text/javascript" src="js/vendor/PIE.js"></script>
+        <![endif]-->
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
         <script>window.jQuery||document.write('<script src=js/vendor/jquery-1.11.1.min.js><\/script>')</script>
         <script src="js/simplecalendar.js"></script>
