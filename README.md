@@ -1,6 +1,6 @@
 # simplecalendar
 This is a simplecalendar test case.
-Documentation is in progress.
+Demonstration: http://humanemagica.com/portfolio/simplecalendar/
 
 ## jQuery Plugin Approach
 I choose to implement calendar as a jQuery plugin in order to follow jQuery extension guidelines; this approach allows various ways to install calendar and removes the need to customize labels/inputs via configuration objects.

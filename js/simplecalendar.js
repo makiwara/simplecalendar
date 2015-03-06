@@ -178,10 +178,15 @@
                 monthHeight ++;
             }
             // insert hidden calendar and curtain in DOM and bind events
-            $calendar.hide();
-            $calendar.appendTo($('body'));
             $curtain = $('<div>').addClass(css('curtain')).appendTo($('body'));
+            $calendar.appendTo($('body'));
             view_bind();
+
+            // update rowHeight and dependants
+            $calendar.find(dotcss('row')).first().each(function(){ rowHeight = $(this).height() });
+            $calendar.find(dotcss('body')).css({ 'max-height' : settings.rows*rowHeight -1 });
+            $calendar.hide();
+
         }
 
         /***************************************************************************************
@@ -237,6 +242,7 @@
          */        
         function view_open($input) {
             if ($input) {
+
                 // calculate offsets from settings ('50%' -> pixels)
                 var offsetLeftRel = _pct(settings.offset.left,  $input.width());
                 var offsetTopRel  = _pct(settings.offset.top,   $input.height());
@@ -269,7 +275,7 @@
                 $calendar.find(dotcss('angle')).css({'margin-top':-shift-20})
 
                 // make sure angle is pointed into <input>, hide it if it is not
-                if ((-shiftLeft > offsetLeftRel - 20) || (shift > -15) || (shift < -$calendar.height()))
+                if ((-shiftLeft > offsetLeftRel - 20) || (shift > -15) || (shift < -$calendar.height()+15))
                     $calendar.find(dotcss('angle')).hide();
                 else
                     $calendar.find(dotcss('angle')).show(); 
@@ -278,10 +284,6 @@
             // show calendar and curtain
             $calendar.show();
             view_showCurtain();
-
-            // update rowHeight and dependants
-            $calendar.find(dotcss('row')).first().each(function(){ rowHeight = $(this).height() });
-            $calendar.find(dotcss('body')).css({ 'max-height' : settings.rows*rowHeight -1 });
 
             // update scroll position and month title
             view_updateScroll();
