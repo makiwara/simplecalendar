@@ -16,7 +16,7 @@ I choose to go with singleton-style approach to calendar behavior. It is not pos
 I took the liberty to implement 0.25-black curtain to help user to focus on
 the calendar pop-up. By same reason document.body scroll is disabled while pop-up is visible: such tactic allows user to focus on date selection.
 
-If this approach does not sound valid, the plugin could be refactored easily by just removing $curtain initialisation code.
+If this approach does not sound valid, the plugin could be refactored easily by just removing $curtain initialization code.
 
 ## Styling
 I choose to put all styles in simplecalendar.css file, because such an approach will allow better customization of visual style and subtle animation behavior.
@@ -25,7 +25,7 @@ The CSS is not minimized because it would be better to glue it with other style 
 
 Another way to get rid of CSS is to hardcode it into javascript library. I consider this path to be inefficient in terms of support and future re-use.
 
-It is not possible to determine exact padding from the PDF, as well as font families and sizes; I took the liberty to use Arial as primary font-face and to adjust paddings, margins and sizes by myself.
+It was not possible to determine exact padding from the PDF, as well as font families and sizes; I took the liberty to use Arial as primary font-face and to adjust paddings, margins and sizes by myself.
 
 ## Browser support
 The plugin was developed using Chrome. I have tested the plugin in Safari, Firefox, Opera and MSIE 8, 9, 10 so far; it worked perfectly with almost no patches required. 
