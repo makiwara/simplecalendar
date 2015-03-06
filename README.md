@@ -28,5 +28,5 @@ Another way to get rid of CSS is to hardcode it into javascript library. I consi
 It is not possible to determine exact padding from the PDF, as well as font families and sizes; I took the liberty to use Arial as primary font-face and to adjust paddings, margins and sizes by myself.
 
 ## Browser support
-The plugin was developed usign Chrome. I have tested the plugin in Safari, Firefox, Opera and MSIE 10 so far; it worked perfectly with no patches required. MSIE 8/9 tests are on the way.
+The plugin was developed using Chrome. I have tested the plugin in Safari, Firefox, Opera and MSIE 10 so far; it worked perfectly with no patches required. MSIE 8/9 tests are on the way.
 
