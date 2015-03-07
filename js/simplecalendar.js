@@ -169,7 +169,7 @@
 
                 // build each day in the week
                 for (var i=0; i<7; i++) {
-                    var $day = $('<div>').html(day.getDate())
+                    var $day = $('<div unselectable="on">').html(day.getDate())
                     $day.addClass(css('date-'+dateToString(day))); // 'simplecalendar-date-dd-mm-yyyy'
 
                     // insert month split and store row number to use in view_updateScroll()
@@ -353,7 +353,7 @@
             $calendar.find(dotcss('row')+" > div").click(function(event){
                 controller_select(this);
                 event.stopPropagation();
-            })
+            }).mousedown(function(event) { event.preventDefault() });
 
             // close pop-up by X button
             $calendar.find(dotcss('close')).click(controller_close);
@@ -444,10 +444,11 @@
         if (settings.prerender) view_prerender();
         var isVisible = false;
         return this.filter('input').each(function() {
+            var to_blur;
             // bind click, focus and blur events
             $(this).click(function(event){ e_controller_open(this, event) })
-                   .focus(function(event){ var that = this; setTimeout(function(){ e_controller_open(that) }, 100) })
-                   .blur (function(event){ setTimeout(controller_close, 100) })
+                   .focus(function(event){ e_controller_open(this) })
+                   .blur (controller_close)
 
             // open first calendar if required by options
             if (settings.visible && !isVisible) {
